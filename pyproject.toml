@@ -1,0 +1,37 @@
+[project]
+name = "antyvw"
+version = "0.1.0"
+description = "AntyVW - minimal static malware detector (PE + strings + entropy + YARA)"
+requires-python = ">=3.10"
+dependencies = [
+    "pefile>=2023.2.7",
+    "python-magic>=0.4.27",
+    "rich>=13.7.1",
+    "click>=8.1.7",
+]
+
+[project.optional-dependencies]
+yara = ["yara-python>=4.5.1"]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[project.scripts]
+antyvw = "src.main:cli"
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+extend-exclude = [".venv", ".ruff_cache"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+ignore = [
+    "SIM105",  # try/except/pass is intentional around third-party parsers
+    "B904",    # raise-from style not needed for CLI error paths
+    "E501",    # line length handled by formatter preference
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["E402"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
